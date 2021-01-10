@@ -1,52 +1,23 @@
 stages:
-- name: Build something
-  steps:
-  - runScriptConfig:
-      image: busybox
-      shellScript: echo ${FIRST_KEY} && echo ${ALIAS_ENV}
-    env:
-      FIRST_KEY: VALUE
-      SECOND_KEY: VALUE2
-    envFrom:
-    - sourceName: my-secret
-      sourceKey: secret-key
-      targetKey: ALIAS_ENV
-  - runScriptConfig:
-      image: busybox
-      shellScript: date -R
-    when:
-      branch:
-        include:
-        - master
-        - dev
-      event:
-        include:
-        - push
+- name: Publish - Landing
   when:
-    branch:
-      include:
-      - master
-    event:
-      include:
-      - push
-      - pull_request
-- name: Publish my image
+    branch: master
   steps:
   - publishImageConfig:
       dockerfilePath: ./Dockerfile
       buildContext: .
-      tag: rancher/rancher:v2.0.0
+      tag: my-landing:${CICD_EXECUTION_SEQUENCE}
       pushRemote: true
-      registry: reg.example.com
-- name: Deploy some workloads
+      registry: registry.example.com
+- name: Deployment - Landing
+  when:
+    branch: master
   steps:
-  - applyYamlConfig:
-      path: ./deployment.yaml
-timeout: 30
-branch:
-  include:
-  - master
-  - feature/*
-  exclude:
-  - dev
-notification: {}
+    - applyYamlConfig:
+        path: ./deployment.yaml
+- name: Ingress - Landing
+  when:
+    branch: master
+  steps:
+    - applyYamlConfig:
+        path: ./ingress.yaml

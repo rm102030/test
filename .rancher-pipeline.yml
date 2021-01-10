@@ -1,7 +1,5 @@
 stages:
 - name: Publish - Landing
-  when:
-    branch: master
   steps:
   - publishImageConfig:
       dockerfilePath: ./Dockerfile
@@ -9,15 +7,24 @@ stages:
       tag: my-landing:${CICD_EXECUTION_SEQUENCE}
       pushRemote: true
       registry: registry.example.com
+  when:
+    branch:
+      include:
+      - master
 - name: Deployment - Landing
-  when:
-    branch: master
   steps:
-    - applyYamlConfig:
-        path: ./deployment.yaml
+  - applyYamlConfig:
+      path: ./deployment.yaml
+  when:
+    branch:
+      include:
+      - master
 - name: Ingress - Landing
-  when:
-    branch: master
   steps:
-    - applyYamlConfig:
-        path: ./ingress.yaml
+  - applyYamlConfig:
+      path: ./ingress.yaml
+  when:
+    branch:
+      include:
+      - master
+notification: {}

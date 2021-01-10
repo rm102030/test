@@ -57,4 +57,3 @@ notification:
   condition: ["Failed", "Success", "Changed"]
   # Ability to override the default message (Optional)
   message: "my-message"
-EDIT THIS PAGE

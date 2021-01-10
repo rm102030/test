@@ -49,14 +49,4 @@ branch:
   - feature/*
   exclude:
   - dev
-notification:
-  recipients:
-  - recipient: '#mychannel'
-    notifier: c-wdcsr:n-c9pg7
-  - recipient: test@example.com
-    notifier: c-wdcsr:n-lkrhd
-  message: my-message
-  condition:
-  - Success
-  - Changed
-  - Failed
+notification: {}
